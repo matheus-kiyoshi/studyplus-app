@@ -11,9 +11,10 @@ import MenuItem from '@mui/material/MenuItem'
 import Drawer from '@mui/material/Drawer'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
-import Sitemark from './SitemarkIcon'
+import Sitemark from '../../SitemarkIcon'
 import { useState } from 'react'
 import ColorModeIconDropdown from '@/shared-theme/ColorModeIconDropdown'
+import NextLink from 'next/link'
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -54,16 +55,40 @@ export default function Header() {
           >
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">
+              <Button
+                href="/"
+                component={NextLink}
+                variant="text"
+                color="info"
+                size="small"
+              >
                 Início
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button
+                href="/activities"
+                component={NextLink}
+                variant="text"
+                color="info"
+                size="small"
+              >
                 Atividades
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button
+                href="/tracker"
+                component={NextLink}
+                variant="text"
+                color="info"
+                size="small"
+              >
                 Acompanhamento
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button
+                href="/study-plans"
+                component={NextLink}
+                variant="text"
+                color="info"
+                size="small"
+              >
                 Planejamentos
               </Button>
             </Box>
@@ -75,10 +100,22 @@ export default function Header() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small">
+            <Button
+              href="/sign-in"
+              component={NextLink}
+              color="primary"
+              variant="text"
+              size="small"
+            >
               Entrar
             </Button>
-            <Button color="primary" variant="contained" size="small">
+            <Button
+              href="/sign-up"
+              component={NextLink}
+              color="primary"
+              variant="contained"
+              size="small"
+            >
               Cadastrar
             </Button>
             <ColorModeIconDropdown />
@@ -113,18 +150,38 @@ export default function Header() {
                   </IconButton>
                 </Box>
 
-                <MenuItem>Início</MenuItem>
-                <MenuItem>Atividades</MenuItem>
-                <MenuItem>Acompanhamento</MenuItem>
-                <MenuItem>Planejamentos</MenuItem>
+                <MenuItem href="/" component={NextLink}>
+                  Início
+                </MenuItem>
+                <MenuItem href="/activities" component={NextLink}>
+                  Atividades
+                </MenuItem>
+                <MenuItem href="/tracker" component={NextLink}>
+                  Acompanhamento
+                </MenuItem>
+                <MenuItem href="/study-plans" component={NextLink}>
+                  Planejamentos
+                </MenuItem>
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
+                  <Button
+                    href="/sign-up"
+                    component={NextLink}
+                    color="primary"
+                    variant="contained"
+                    fullWidth
+                  >
                     Cadastrar
                   </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
+                  <Button
+                    href="/sign-up"
+                    component={NextLink}
+                    color="primary"
+                    variant="outlined"
+                    fullWidth
+                  >
                     Entrar
                   </Button>
                 </MenuItem>
