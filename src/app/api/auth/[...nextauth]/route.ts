@@ -2,7 +2,11 @@
 import api from '@/utils/api'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import Google from 'next-auth/providers/google'
+/*import Google from 'next-auth/providers/google'
+import crypto from 'crypto'
+import { sendPasswordEmail } from '../../send/route'
+import axios from 'axios'
+import { jwtGen } from '@/utils/jsonwebtokengen'*/
 
 const proxy = async (token: string) => {
   if (!token) return null
@@ -30,10 +34,10 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   providers: [
-    Google({
+    /*Google({
       clientId: process.env.GOOGLE_CLIENT_ID ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
-    }),
+    }),*/
     Credentials({
       name: 'Credentials',
       credentials: {
@@ -79,14 +83,40 @@ export const authOptions: NextAuthOptions = {
       account: any
     }) {
       if (account && user) {
+        /*if (account.provider === 'google' && user.email) {
+          const response = await api.get(`user/search/${user.email}`)
+          if (response.data.statusCode === 404) {
+            try {
+              const password = crypto.randomBytes(8).toString('hex')
+
+              const response = await api.post('user', {
+                name: user.name,
+                email: user.email,
+                password: password,
+              })
+              if (response.status === 201) {
+                await sendPasswordEmail(user.email, password)
+              }
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                console.error(
+                  'Erro ao registrar usuário:',
+                  error.response?.data || error.message,
+                )
+                if (error.response) {
+                  console.log('Mensagem de erro:', error.response.data.message)
+                }
+              } else {
+                console.error('Erro desconhecido:', error)
+              }
+            }
+          }
+        }
+        */
+
         return {
           ...token,
-          accessToken: user.token,
-          user: {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          },
+          user: user,
         }
       }
 

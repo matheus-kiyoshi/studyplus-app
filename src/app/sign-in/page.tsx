@@ -216,7 +216,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => alert('Entrar com Google')}
+            onClick={() => {
+              alert('Em breve')
+              // signIn('google', { callbackUrl: '/' })
+            }}
             startIcon={<GoogleIcon />}
           >
             Entre com Google
