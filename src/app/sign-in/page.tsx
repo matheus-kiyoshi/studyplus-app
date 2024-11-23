@@ -206,7 +206,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Button>
           <Typography sx={{ textAlign: 'center' }}>
             Não possui uma conta?{' '}
-            <Link href="/sign-in" variant="body2" sx={{ alignSelf: 'center' }}>
+            <Link href="/sign-up" variant="body2" sx={{ alignSelf: 'center' }}>
               Cadastre-se
             </Link>
           </Typography>
