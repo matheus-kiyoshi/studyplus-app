@@ -15,6 +15,7 @@ import Sitemark from '../../SitemarkIcon'
 import { useState } from 'react'
 import ColorModeIconDropdown from '@/shared-theme/ColorModeIconDropdown'
 import NextLink from 'next/link'
+import { signOut, useSession } from 'next-auth/react'
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -32,6 +33,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const { data: session } = useSession()
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -100,24 +102,37 @@ export default function Header() {
               alignItems: 'center',
             }}
           >
-            <Button
-              href="/sign-in"
-              component={NextLink}
-              color="primary"
-              variant="text"
-              size="small"
-            >
-              Entrar
-            </Button>
-            <Button
-              href="/sign-up"
-              component={NextLink}
-              color="primary"
-              variant="contained"
-              size="small"
-            >
-              Cadastrar
-            </Button>
+            {session ? (
+              <Button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                color="primary"
+                variant="contained"
+                size="small"
+              >
+                Sair
+              </Button>
+            ) : (
+              <>
+                <Button
+                  href="/sign-in"
+                  component={NextLink}
+                  color="primary"
+                  variant="text"
+                  size="small"
+                >
+                  Entrar
+                </Button>
+                <Button
+                  href="/sign-up"
+                  component={NextLink}
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                >
+                  Cadastrar
+                </Button>
+              </>
+            )}
             <ColorModeIconDropdown />
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
@@ -163,28 +178,43 @@ export default function Header() {
                   Planejamentos
                 </MenuItem>
                 <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button
-                    href="/sign-up"
-                    component={NextLink}
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                  >
-                    Cadastrar
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button
-                    href="/sign-up"
-                    component={NextLink}
-                    color="primary"
-                    variant="outlined"
-                    fullWidth
-                  >
-                    Entrar
-                  </Button>
-                </MenuItem>
+                {session ? (
+                  <MenuItem>
+                    <Button
+                      onClick={() => signOut({ callbackUrl: '/' })}
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                    >
+                      Sair
+                    </Button>
+                  </MenuItem>
+                ) : (
+                  <>
+                    <MenuItem>
+                      <Button
+                        href="/sign-up"
+                        component={NextLink}
+                        color="primary"
+                        variant="contained"
+                        fullWidth
+                      >
+                        Cadastrar
+                      </Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button
+                        href="/sign-in"
+                        component={NextLink}
+                        color="primary"
+                        variant="outlined"
+                        fullWidth
+                      >
+                        Entrar
+                      </Button>
+                    </MenuItem>
+                  </>
+                )}
               </Box>
             </Drawer>
           </Box>

@@ -4,6 +4,7 @@ import './globals.css'
 import { Roboto } from 'next/font/google'
 import AppTheme from '@/shared-theme/AppTheme'
 import { CssBaseline } from '@mui/material'
+import { NextAuthProvider } from './providers'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -27,12 +28,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={roboto.variable}>
-        <AppRouterCacheProvider>
-          <AppTheme {...props}>
-            <CssBaseline enableColorScheme />
-            {children}
-          </AppTheme>
-        </AppRouterCacheProvider>
+        <NextAuthProvider>
+          <AppRouterCacheProvider>
+            <AppTheme {...props}>
+              <CssBaseline enableColorScheme />
+              {children}
+            </AppTheme>
+          </AppRouterCacheProvider>
+        </NextAuthProvider>
       </body>
     </html>
   )
