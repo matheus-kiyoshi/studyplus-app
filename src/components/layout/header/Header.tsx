@@ -16,6 +16,7 @@ import { useState } from 'react'
 import ColorModeIconDropdown from '@/shared-theme/ColorModeIconDropdown'
 import NextLink from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -34,6 +35,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function Header() {
   const [open, setOpen] = useState(false)
   const { data: session } = useSession()
+  const pathname = usePathname()
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -60,8 +62,8 @@ export default function Header() {
               <Button
                 href="/"
                 component={NextLink}
-                variant="text"
-                color="info"
+                variant={pathname === '/' ? 'contained' : 'text'}
+                color="primary"
                 size="small"
               >
                 Início
@@ -69,8 +71,8 @@ export default function Header() {
               <Button
                 href="/activities"
                 component={NextLink}
-                variant="text"
-                color="info"
+                variant={pathname === '/activities' ? 'contained' : 'text'}
+                color="primary"
                 size="small"
               >
                 Atividades
@@ -78,8 +80,8 @@ export default function Header() {
               <Button
                 href="/tracker"
                 component={NextLink}
-                variant="text"
-                color="info"
+                variant={pathname === '/tracker' ? 'contained' : 'text'}
+                color="primary"
                 size="small"
               >
                 Acompanhamento
@@ -87,8 +89,8 @@ export default function Header() {
               <Button
                 href="/study-plans"
                 component={NextLink}
-                variant="text"
-                color="info"
+                variant={pathname === '/study-plans' ? 'contained' : 'text'}
+                color="primary"
                 size="small"
               >
                 Planejamentos
