@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import * as React from 'react'
+import { FormEvent, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -15,6 +16,9 @@ import { styled } from '@mui/material/styles'
 import AppTheme from '@/shared-theme/AppTheme'
 import { GoogleIcon, SitemarkIcon } from '@/components/sign-up/CustomIcons'
 import ColorModeSelect from '@/shared-theme/ColorModeSelect'
+import api from '@/utils/api'
+import { redirect, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -59,12 +63,18 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }))
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
-  const [passwordError, setPasswordError] = React.useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
-  const [nameError, setNameError] = React.useState(false)
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('')
+  const [emailError, setEmailError] = useState(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState('')
+  const [passwordError, setPasswordError] = useState(false)
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
+  const [nameError, setNameError] = useState(false)
+  const [nameErrorMessage, setNameErrorMessage] = useState('')
+  const { data: session } = useSession()
+  const router = useRouter()
+
+  if (session) {
+    redirect('/')
+  }
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement
@@ -82,9 +92,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setEmailErrorMessage('')
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password.value || password.value.length < 8) {
       setPasswordError(true)
-      setPasswordErrorMessage('A senha deve ter pelo menos 6 caracteres.')
+      setPasswordErrorMessage('A senha deve ter pelo menos 8 caracteres.')
+      isValid = false
+    } else if (
+      !password.value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    ) {
+      setPasswordError(true)
+      setPasswordErrorMessage('A senha deve ter pelo menos 1 letra e 1 número.')
       isValid = false
     } else {
       setPasswordError(false)
@@ -103,18 +119,52 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     return isValid
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     if (nameError || emailError || passwordError) {
-      event.preventDefault()
       return
     }
     const data = new FormData(event.currentTarget)
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+    const payload = {
+      name: data.get('name') as string,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+    }
+
+    try {
+      const response = await api.post('user', payload)
+      if (response.status !== 201) {
+        if (response.data.message === 'User already exists') {
+          setEmailError(true)
+          setEmailErrorMessage('Usuário já cadastrado!')
+        } else if (response.data.message === 'password too weak') {
+          setPasswordError(true)
+          setPasswordErrorMessage('Senha muito fraca!')
+        } else {
+          alert(`Erro ao cadastrar usuário: ${response.data.message}`)
+        }
+      } else {
+        router.push('/sign-in')
+      }
+    } catch (error) {
+      if ((error as any).response) {
+        if ((error as any).response.data.message === 'User already exists') {
+          setEmailError(true)
+          setEmailErrorMessage('Usuário já cadastrado!')
+        } else if (
+          (error as any).response.data.message === 'password too weak'
+        ) {
+          setPasswordError(true)
+          setPasswordErrorMessage('Senha muito fraca!')
+        } else {
+          alert(
+            `Erro ao cadastrar usuário: ${(error as any).response.data.message}`,
+          )
+        }
+      } else {
+        console.error('Erro desconhecido:', error)
+      }
+    }
   }
 
   return (
