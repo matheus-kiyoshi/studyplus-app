@@ -1,5 +1,5 @@
 'use client'
-import * as React from 'react'
+import { useState, FormEvent } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -16,6 +16,8 @@ import { styled } from '@mui/material/styles'
 import ForgotPassword from '@/components/sign-in/ForgotPassword'
 import { GoogleIcon, SitemarkIcon } from '@/components/sign-in/CustomIcons'
 import ColorModeSelect from '@/shared-theme/ColorModeSelect'
+import { signIn, useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -61,11 +63,14 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false)
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
-  const [passwordError, setPasswordError] = React.useState(false)
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
-  const [open, setOpen] = React.useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState('')
+  const [passwordError, setPasswordError] = useState(false)
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
+  const [open, setOpen] = useState(false)
+  const { data: session } = useSession()
+
+  if (session) redirect('/')
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -75,16 +80,28 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false)
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     if (emailError || passwordError) {
-      event.preventDefault()
       return
     }
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    const response = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
     })
+    if (response?.error) {
+      setEmailError(true)
+      setEmailErrorMessage('Email ou senha inválidos.')
+      setPasswordError(true)
+      setPasswordErrorMessage('Email ou senha inválidos.')
+    } else {
+      redirect('/')
+    }
   }
 
   const validateInputs = () => {
