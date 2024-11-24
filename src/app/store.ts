@@ -1,5 +1,21 @@
 import { create } from 'zustand'
 
+export type Topic = {
+  id: string
+  name: string
+  description: string
+  timeSpent: number
+}
+
+export type Subject = {
+  id: string
+  name: string
+  description: string
+  timeSpent: number
+  color: string
+  Topics: Topic[]
+}
+
 interface AppState {
   value: number
   selectedSubject: {
@@ -8,6 +24,7 @@ interface AppState {
     description: string
     timeSpent: number
     color: string
+    Topics: Topic[] | undefined
   } | null
   subjects: {
     id: string
@@ -15,6 +32,7 @@ interface AppState {
     description: string
     timeSpent: number
     color: string
+    Topics: Topic[]
   }[]
   setValue: (value: number) => void
   setSelectedSubject: (subject: {
@@ -23,6 +41,7 @@ interface AppState {
     description: string
     timeSpent: number
     color: string
+    Topics: Topic[]
   }) => void
   setSubjects: (
     subjects: {
@@ -31,6 +50,7 @@ interface AppState {
       description: string
       timeSpent: number
       color: string
+      Topics: Topic[]
     }[],
   ) => void
 }

@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 import { Box, Button } from '@mui/material'
 import Subjects from './Subjects'
 import CreateSubject from './CreateSubject'
-import useAppStore from '@/app/store'
+import useAppStore, { Subject, Topic } from '@/app/store'
 import EditSubject from './EditSubject'
 import api from '@/utils/api'
 import { useSession } from 'next-auth/react'
 
 export default function SubjectsMain() {
-  const { value, setValue, selectedSubject } = useAppStore()
+  const { value, setValue, selectedSubject, setSubjects } = useAppStore()
   const [fetched, setFetched] = useState(false)
   const { data: session } = useSession()
 
@@ -21,15 +21,37 @@ export default function SubjectsMain() {
             Authorization: `Bearer ${session?.user?.token}`,
           },
         })
-        useAppStore.getState().setSubjects(response.data)
+        const subs = response.data as Subject[]
+
+        await Promise.all(
+          subs.map(async (sub: Subject) => {
+            sub.Topics = await fetchTopics(sub.id)
+          }),
+        )
+
+        setSubjects(subs)
         setFetched(true)
       } catch (error) {
         console.error(error)
       }
     }
 
-    if (!fetched) fetchSubjects()
-  }, [session?.user.token, fetched])
+    const fetchTopics = async (id: string) => {
+      try {
+        const response = await api.get(`subjects/${id}/topics`, {
+          headers: {
+            Authorization: `Bearer ${session?.user?.token}`,
+          },
+        })
+        return response.data as Topic[]
+      } catch (error) {
+        console.error(error)
+        return []
+      }
+    }
+
+    if (!fetched && session?.user.token) fetchSubjects()
+  }, [session?.user.token, fetched, setSubjects])
 
   return (
     <>

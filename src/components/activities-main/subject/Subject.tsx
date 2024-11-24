@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import useAppStore from '@/app/store'
+import useAppStore, { Topic } from '@/app/store'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { TiStopwatch } from 'react-icons/ti'
 
@@ -9,6 +9,7 @@ interface SubjectProps {
   name: string
   description: string
   timeSpent: number
+  Topics: Topic[]
 }
 
 export default function Subject({
@@ -17,6 +18,7 @@ export default function Subject({
   name,
   description,
   timeSpent,
+  Topics,
 }: SubjectProps) {
   const { setSelectedSubject, setValue } = useAppStore()
   const hours = Math.floor(timeSpent / 3600)
@@ -31,7 +33,7 @@ export default function Subject({
         justifyContent: 'space-between',
       }}
       onClick={() => {
-        setSelectedSubject({ id, name, description, timeSpent, color })
+        setSelectedSubject({ id, name, description, timeSpent, color, Topics })
         setValue(2)
       }}
     >

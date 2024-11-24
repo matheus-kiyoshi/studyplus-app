@@ -1,10 +1,19 @@
 import { useState, FormEvent } from 'react'
 import { ColorResult } from 'react-color'
-import { TextField, Button, Box, Typography, Divider } from '@mui/material'
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Divider,
+  Stack,
+  Modal,
+} from '@mui/material'
 import { ColorPicker } from '../ColorPicker'
 import useAppStore from '@/app/store'
 import api from '@/utils/api'
 import { useSession } from 'next-auth/react'
+import CreateTopic from '@/components/activities-main/Topic/CreateTopic'
 
 interface Subject {
   id?: string
@@ -12,6 +21,18 @@ interface Subject {
   description: string
   timeSpent?: number
   color: string
+}
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
 }
 
 export default function EditSubject({
@@ -32,8 +53,13 @@ export default function EditSubject({
     name: '',
     description: '',
   })
+  const [open, setOpen] = useState(false)
   const { subjects, setValue, setSubjects } = useAppStore()
   const { data: session } = useSession()
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  console.log(subjects.find((subject) => subject.id === id))
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -81,8 +107,6 @@ export default function EditSubject({
       return
     }
 
-    console.log('Subject:', subject)
-
     try {
       const response = await api.patch(`subjects/${id}`, subject, {
         headers: {
@@ -90,7 +114,6 @@ export default function EditSubject({
         },
       })
       const newSubjects = subjects.map((s) => (s.id === id ? response.data : s))
-
       setSubjects(newSubjects)
       setValue(0)
     } catch (error) {
@@ -98,7 +121,7 @@ export default function EditSubject({
     }
   }
 
-  const handleDelete = async (id: string | undefined) => {
+  const handleDelete = async () => {
     if (!id) {
       alert('Matéria não encontrada')
       return null
@@ -112,6 +135,32 @@ export default function EditSubject({
       const newSubjects = subjects.filter((s) => s.id !== id)
       setSubjects(newSubjects)
       setValue(0)
+    } catch (error) {
+      console.error('Erro de rede:', error)
+    }
+  }
+
+  const handleDeleteTopic = async (topicId: string | undefined) => {
+    if (!topicId) {
+      alert('Matéria não encontrada')
+      return null
+    }
+    try {
+      await api.delete(`subjects/${id}/topics/${topicId}`, {
+        headers: {
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+      })
+      const newSubjects = subjects.map((s) => {
+        if (s.id === id) {
+          return {
+            ...s,
+            Topics: s.Topics?.filter((t) => t.id !== topicId),
+          }
+        }
+        return s
+      })
+      setSubjects(newSubjects)
     } catch (error) {
       console.error('Erro de rede:', error)
     }
@@ -162,13 +211,60 @@ export default function EditSubject({
         <Typography variant="body1">Cor</Typography>
         <ColorPicker color={subject.color} onChange={handleColorChange} />
       </Box>
+
+      <Box className="mt-3 flex items-start justify-between">
+        <Typography variant="h6" component="h3">
+          Tópicos
+        </Typography>
+        {subjects ? (
+          <Stack spacing={1}>
+            {subjects
+              .find((subject) => subject.id === id)
+              ?.Topics?.map((topic, index) => (
+                <Box
+                  key={index}
+                  className="flex items-center justify-between gap-4"
+                >
+                  <Typography variant="body1">{topic.name}</Typography>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ px: 2 }}
+                    onClick={() => handleDeleteTopic(topic.id)}
+                  >
+                    Excluir
+                  </Button>
+                </Box>
+              ))}
+          </Stack>
+        ) : null}
+        <Button
+          onClick={handleOpen}
+          variant="contained"
+          color="primary"
+          sx={{ px: 2 }}
+        >
+          Criar Tópico
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <CreateTopic subjectId={id} handleClose={handleClose} />
+          </Box>
+        </Modal>
+      </Box>
+
       <Divider className="my-2" />
       <Box className="flex items-center justify-between">
         <Button
           variant="contained"
           color="error"
           sx={{ px: 2 }}
-          onClick={() => handleDelete(id)}
+          onClick={() => handleDelete()}
         >
           Excluir
         </Button>

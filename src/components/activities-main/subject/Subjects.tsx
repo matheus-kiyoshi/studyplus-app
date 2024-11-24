@@ -26,6 +26,7 @@ export default function Subjects({ className }: SubjectsProps) {
               description={subject.description}
               timeSpent={subject.timeSpent}
               color={subject.color}
+              Topics={subject.Topics}
             />
             <Divider />
           </Fragment>
