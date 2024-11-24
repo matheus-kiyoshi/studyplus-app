@@ -3,30 +3,37 @@ import { ColorResult } from 'react-color'
 import { TextField, Button, Box, Typography, Divider } from '@mui/material'
 import { ColorPicker } from '../ColorPicker'
 import useAppStore from '@/app/store'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import api from '@/utils/api'
-import axios from 'axios'
+import { useSession } from 'next-auth/react'
 
 interface Subject {
+  id?: string
   name: string
   description: string
+  timeSpent?: number
   color: string
 }
 
-export default function CreateSubject() {
+export default function EditSubject({
+  id,
+  name,
+  description,
+  timeSpent,
+  color,
+}: Subject) {
   const [subject, setSubject] = useState<Subject>({
-    name: '',
-    description: '',
-    color: '#fff',
+    name: name ?? '',
+    description: description ?? '',
+    timeSpent: timeSpent ?? 0,
+    color: color ?? '#fff',
   })
+
   const [errors, setErrors] = useState({
     name: '',
     description: '',
   })
   const { subjects, setValue, setSubjects } = useAppStore()
   const { data: session } = useSession()
-  const router = useRouter()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -73,36 +80,21 @@ export default function CreateSubject() {
     if (!validateForm()) {
       return
     }
-    if (!session) {
-      router.push('/sign-in')
-      return
-    }
+
+    console.log('Subject:', subject)
 
     try {
-      const response = await api.post('/subjects', subject, {
+      const response = await api.patch(`subjects/${id}`, subject, {
         headers: {
           Authorization: `Bearer ${session?.user?.token}`,
         },
       })
-      setSubjects([...subjects, response.data])
+      const newSubjects = subjects.map((s) => (s.id === id ? response.data : s))
+
+      setSubjects(newSubjects)
       setValue(0)
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('Erro:', error.response.data)
-        if (error.response.data.statusCode === 401) {
-          router.push('/sign-in')
-        } else if (error.response.data.statusCode === 400) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const newErrors: any = {}
-          newErrors.name = 'A matéria já existe.'
-          setErrors(newErrors)
-          console.log('Matéria já existe')
-        } else {
-          alert('Servidor Indisponível')
-        }
-      } else {
-        console.error('Erro desconhecido:', error)
-      }
+      console.error('Erro de rede:', error)
     }
   }
 
@@ -154,7 +146,7 @@ export default function CreateSubject() {
       <Divider className="my-2" />
       <Box className="flex gap-4">
         <Button type="submit" variant="contained" color="primary">
-          Criar Matéria
+          Editar Matéria
         </Button>
         <Button
           variant="text"

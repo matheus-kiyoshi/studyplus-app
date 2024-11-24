@@ -15,21 +15,6 @@ const apiConfig: Partial<InternalAxiosRequestConfig> = {
 
 const api: AxiosInstance = axios.create(apiConfig)
 
-api.interceptors.request.use(
-  (config) => {
-    const token = ''
-    if (config.params?.useToken !== false && token) {
-      console.log('Adicionando token de autenticação...')
-      config.headers.Authorization = `Bearer ${token}`
-    }
-
-    return config
-  },
-  (error) => {
-    return Promise.reject(error)
-  },
-)
-
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response

@@ -58,7 +58,7 @@ export default function Header() {
             sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}
           >
             <Sitemark />
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
               <Button
                 href="/"
                 component={NextLink}
