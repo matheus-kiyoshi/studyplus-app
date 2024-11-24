@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import { Button } from '@mui/material'
 import SubjectsMain from './subject/Main'
+import CreateActivity from './activities/CreateActivity'
 
 interface TabPanelProps {
   children?: ReactNode
@@ -37,6 +38,7 @@ function a11yProps(index: number) {
 
 export default function BasicTabs() {
   const [value, setValue] = useState(0)
+  const [value2, setValue2] = useState(0)
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -52,9 +54,29 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Box sx={{ backgroundColor: '#0000000f' }} className="rounded-b-md p-2">
-          <Button variant="contained">Criar Atividade</Button>
-        </Box>
+        {value2 === 0 ? (
+          <>
+            <Box
+              sx={{ backgroundColor: '#0000000f' }}
+              className="rounded-b-md p-2"
+            >
+              <Button variant="contained">Criar Atividade</Button>
+            </Box>
+            <CreateActivity />
+          </>
+        ) : (
+          <>
+            <Box
+              sx={{ backgroundColor: '#0000000f' }}
+              className="rounded-b-md p-2"
+            >
+              <Button variant="contained" onClick={() => setValue2(0)}>
+                Voltar
+              </Button>
+            </Box>
+            <CreateActivity />
+          </>
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <Box sx={{ backgroundColor: '#0000000f' }} className="rounded-b-md p-2">

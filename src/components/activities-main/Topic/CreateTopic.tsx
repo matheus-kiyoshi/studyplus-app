@@ -30,8 +30,6 @@ export default function CreateTopic({
   const { data: session } = useSession()
   const router = useRouter()
 
-  console.log(subjects)
-
   const handleChangeTopic = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setTopic((prev) => ({
