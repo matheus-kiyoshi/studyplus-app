@@ -26,8 +26,8 @@ export const ColorPicker = ({
         onClick={handleOpen}
         sx={{
           backgroundColor: color,
-          color: color === '#fff' ? '#000' : '#fff',
-          border: color === '#fff' ? '1px solid #000' : 'none',
+          color: color === '#fff' ? '#000 !important' : '#fff !important',
+          border: color === '#fff' ? '1px solid #000' : '1px solid #fff',
           '&:hover': {
             backgroundColor: color,
             opacity: 0.9,

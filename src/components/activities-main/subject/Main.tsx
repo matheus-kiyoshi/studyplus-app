@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Button } from '@mui/material'
 import Subjects from './Subjects'
 import CreateSubject from './CreateSubject'
@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react'
 
 export default function SubjectsMain() {
   const { value, setValue, selectedSubject } = useAppStore()
+  const [fetched, setFetched] = useState(false)
   const { data: session } = useSession()
 
   useEffect(() => {
@@ -21,13 +22,14 @@ export default function SubjectsMain() {
           },
         })
         useAppStore.getState().setSubjects(response.data)
+        setFetched(true)
       } catch (error) {
         console.error(error)
       }
     }
 
-    fetchSubjects()
-  }, [session])
+    if (!fetched) fetchSubjects()
+  }, [session?.user.token, fetched])
 
   return (
     <>

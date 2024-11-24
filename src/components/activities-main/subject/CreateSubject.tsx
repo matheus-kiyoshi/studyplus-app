@@ -154,7 +154,7 @@ export default function CreateSubject() {
       <Divider className="my-2" />
       <Box className="flex gap-4">
         <Button type="submit" variant="contained" color="primary">
-          Criar Matéria
+          Salvar
         </Button>
         <Button
           variant="text"

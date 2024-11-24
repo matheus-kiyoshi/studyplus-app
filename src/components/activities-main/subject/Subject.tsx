@@ -40,12 +40,12 @@ export default function Subject({
           className="h-4 w-4 rounded-full"
           style={{ backgroundColor: color }}
         ></div>
-        <h2 className="text-lg font-medium text-gray-800">{name}</h2>
+        <h2 className="text-lg font-medium">{name}</h2>
       </div>
       <div className="flex items-center justify-center gap-4">
         <div className="flex items-center justify-between gap-1">
           <TiStopwatch className="h-4 w-4 text-black" />
-          <p className="text-base text-gray-800">
+          <p className="text-base">
             {hours}h {minutes}m
           </p>
         </div>

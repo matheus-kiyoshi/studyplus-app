@@ -23,6 +23,7 @@ api.interceptors.response.use(
     if (error.response) {
       if (error.response.status === 401) {
         console.error('Não autorizado! Redirecionando para login...')
+        console.log(error.response.data)
         redirect('/sign-in')
       } else if (error.response.status === 500) {
         console.error('Erro interno do servidor!')

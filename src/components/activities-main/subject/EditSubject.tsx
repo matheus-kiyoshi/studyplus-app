@@ -98,6 +98,25 @@ export default function EditSubject({
     }
   }
 
+  const handleDelete = async (id: string | undefined) => {
+    if (!id) {
+      alert('Matéria não encontrada')
+      return null
+    }
+    try {
+      await api.delete(`subjects/${id}`, {
+        headers: {
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+      })
+      const newSubjects = subjects.filter((s) => s.id !== id)
+      setSubjects(newSubjects)
+      setValue(0)
+    } catch (error) {
+      console.error('Erro de rede:', error)
+    }
+  }
+
   return (
     <Box
       component="form"
@@ -144,18 +163,28 @@ export default function EditSubject({
         <ColorPicker color={subject.color} onChange={handleColorChange} />
       </Box>
       <Divider className="my-2" />
-      <Box className="flex gap-4">
-        <Button type="submit" variant="contained" color="primary">
-          Editar Matéria
-        </Button>
+      <Box className="flex items-center justify-between">
         <Button
-          variant="text"
+          variant="contained"
           color="error"
           sx={{ px: 2 }}
-          onClick={() => setValue(0)}
+          onClick={() => handleDelete(id)}
         >
-          Cancelar
+          Excluir
         </Button>
+        <Box className="flex gap-4">
+          <Button type="submit" variant="contained" color="primary">
+            Salvar
+          </Button>
+          <Button
+            variant="text"
+            color="secondary"
+            sx={{ px: 2 }}
+            onClick={() => setValue(0)}
+          >
+            Cancelar
+          </Button>
+        </Box>
       </Box>
     </Box>
   )
