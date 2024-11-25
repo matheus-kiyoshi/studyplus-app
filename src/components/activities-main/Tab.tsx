@@ -1,11 +1,13 @@
 'use client'
-import { useState, SyntheticEvent, ReactNode } from 'react'
+import { useState, SyntheticEvent, ReactNode, useEffect } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 import { Button } from '@mui/material'
 import SubjectsMain from './subject/Main'
 import CreateActivity from './activities/CreateActivity'
+import { useSession } from 'next-auth/react'
+import useAppStore from '@/app/store'
 
 interface TabPanelProps {
   children?: ReactNode
@@ -39,6 +41,14 @@ function a11yProps(index: number) {
 export default function BasicTabs() {
   const [value, setValue] = useState(0)
   const [value2, setValue2] = useState(0)
+  const { data: session } = useSession()
+  const { isFetched, fetchSubjects } = useAppStore()
+
+  useEffect(() => {
+    if (session?.user.token && !isFetched) {
+      fetchSubjects(session.user.token)
+    }
+  }, [session?.user.token, isFetched, fetchSubjects])
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue)
