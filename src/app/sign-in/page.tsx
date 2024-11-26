@@ -217,8 +217,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             fullWidth
             variant="outlined"
             onClick={() => {
-              alert('Em breve')
-              // signIn('google', { callbackUrl: '/' })
+              signIn('google', { callbackUrl: '/' })
             }}
             startIcon={<GoogleIcon />}
           >

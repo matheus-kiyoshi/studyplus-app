@@ -45,6 +45,7 @@ export default function BasicTabs() {
   const { isFetched, fetchSubjects } = useAppStore()
 
   useEffect(() => {
+    console.log(session)
     if (session?.user.token && !isFetched) {
       fetchSubjects(session.user.token)
     }
