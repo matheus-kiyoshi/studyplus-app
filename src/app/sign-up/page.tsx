@@ -18,7 +18,7 @@ import { GoogleIcon, SitemarkIcon } from '@/components/sign-up/CustomIcons'
 import ColorModeSelect from '@/shared-theme/ColorModeSelect'
 import api from '@/utils/api'
 import { redirect, useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -248,8 +248,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="outlined"
               onClick={() => {
-                alert('Em breve')
-                // signIn('google', { callbackUrl: '/' })
+                signIn('google', { callbackUrl: '/' })
               }}
               startIcon={<GoogleIcon />}
             >

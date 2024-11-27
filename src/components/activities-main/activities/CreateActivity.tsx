@@ -19,6 +19,7 @@ import axios from 'axios'
 
 interface Activity {
   startDate: string
+  startTime: string // Adicionando a hora
   studyTime: number
   questionsDone?: number
   questionsCorrect?: number
@@ -30,6 +31,7 @@ interface Activity {
 export default function CreateActivity() {
   const [activity, setActivity] = useState<Activity>({
     startDate: new Date().toISOString().split('T')[0],
+    startTime: '00:00', // Inicializando com hora 00:00
     studyTime: 0,
     questionsDone: 0,
     questionsCorrect: 0,
@@ -46,6 +48,7 @@ export default function CreateActivity() {
   const { subjects, setSubjects } = useAppStore()
   const { data: session } = useSession()
   const router = useRouter()
+
   const handleSelectChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target
     setActivity((prev) => ({
@@ -95,7 +98,7 @@ export default function CreateActivity() {
 
     try {
       const payload = {
-        startDate: activity.startDate,
+        startDate: `${activity.startDate}T${activity.startTime}:00`, // Combinando data e hora
         studyTime: activity.studyTime,
       }
       const response = await api.post(
@@ -187,21 +190,60 @@ export default function CreateActivity() {
       <Typography variant="h5" component="h2">
         Criar Atividade
       </Typography>
-
-      <TextField
-        id="startDate"
-        name="startDate"
-        label="Data de Início"
-        type="date"
-        value={activity.startDate}
-        onChange={handleInputChange}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        variant="standard"
-        size="medium"
-      />
-
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <TextField
+          id="startDate"
+          name="startDate"
+          label="Data de Início"
+          type="date"
+          value={activity.startDate}
+          onChange={handleInputChange}
+          variant="standard"
+          size="medium"
+        />
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <TextField
+            id="startTimeHours"
+            name="startTime"
+            label="Horas"
+            type="number"
+            value={activity.startTime.split(':')[0]}
+            onChange={(e) => {
+              const hours = parseInt(e.target.value || '00', 10)
+              setActivity((prev) => ({
+                ...prev,
+                startTime: `${hours.toString().padStart(2, '0')}:${prev.startTime.split(':')[1]}`,
+              }))
+            }}
+            variant="standard"
+            size="medium"
+            sx={{ flex: 1 }}
+            slotProps={{
+              htmlInput: { min: 0, max: 23 },
+            }}
+          />
+          <TextField
+            id="startTimeMinutes"
+            name="startTime"
+            label="Minutos"
+            type="number"
+            value={activity.startTime.split(':')[1]}
+            onChange={(e) => {
+              const minutes = parseInt(e.target.value || '00', 10)
+              setActivity((prev) => ({
+                ...prev,
+                startTime: `${prev.startTime.split(':')[0]}:${minutes.toString().padStart(2, '0')}`,
+              }))
+            }}
+            variant="standard"
+            size="medium"
+            sx={{ flex: 1 }}
+            slotProps={{
+              htmlInput: { min: 0, max: 59 },
+            }}
+          />
+        </Box>
+      </Box>
       <FormControl fullWidth error={!!errors.subjectId}>
         <InputLabel id="subject-select-label">Matéria</InputLabel>
         <Select
@@ -222,7 +264,6 @@ export default function CreateActivity() {
           {errors.subjectId}
         </Typography>
       </FormControl>
-
       <FormControl
         fullWidth
         error={!!errors.topicId}
@@ -247,7 +288,6 @@ export default function CreateActivity() {
           {errors.topicId}
         </Typography>
       </FormControl>
-
       <Box sx={{ display: 'flex', gap: 2 }}>
         <TextField
           id="studyTimeHours"
@@ -307,7 +347,6 @@ export default function CreateActivity() {
           sx={{ flex: 1 }}
         />
       </Box>
-
       <Box sx={{ display: 'flex', gap: 2 }}>
         <TextField
           id="questionsDone"
@@ -332,7 +371,6 @@ export default function CreateActivity() {
           sx={{ flex: 1 }}
         />
       </Box>
-
       <Divider className="my-2" />
       <Box className="flex gap-4">
         <Button type="submit" variant="contained" color="primary">

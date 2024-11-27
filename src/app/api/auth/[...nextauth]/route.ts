@@ -3,7 +3,6 @@ import api from '@/utils/api'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
-import axios from 'axios'
 
 const proxy = async (token: string) => {
   if (!token) return null
@@ -48,7 +47,7 @@ export const authOptions: NextAuthOptions = {
                 Authorization: `Bearer ${access_token}`,
               },
             })
-            if (!user) throw new Error('Erro ao autenticar usuário com Google') 
+            if (!user) throw new Error('Erro ao autenticar usuário com Google')
 
             return {
               id: user.id || profile.sub,
@@ -105,9 +104,9 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (token?.accessToken) {
-        session.accessToken = token.accessToken
+        session.accessToken = token.accessToken as string
       }
       if (token?.user) {
         session.user = token.user
