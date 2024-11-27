@@ -55,8 +55,8 @@ export default function RecentActivities() {
 
                 return (
                   <React.Fragment key={activity.id}>
-                    <Box className="my-1 flex w-full items-center justify-between">
-                      <div className="flex items-center gap-4">
+                    <Box className="my-1 flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
+                      <div className="flex w-full items-center justify-between gap-4 sm:w-min sm:justify-normal">
                         <Typography
                           variant="subtitle1"
                           className="flex items-center gap-1"
@@ -74,7 +74,7 @@ export default function RecentActivities() {
                           {activity.Topic?.name}
                         </Typography>
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex w-full items-center justify-between gap-4 sm:w-min sm:justify-normal">
                         <Typography className="flex items-center gap-1">
                           <FaClock />
                           {formattedTime}

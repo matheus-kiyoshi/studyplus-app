@@ -72,17 +72,17 @@ export default function Historic() {
     <div>
       <h1 className="text-xl font-bold">Histórico</h1>
       <Divider className="pt-4" />
-      <Box className="imtes-start flex gap-4">
+      <Box className="flex flex-col items-start gap-4 md:flex-row">
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            width: { xs: '100%', lg: '36%' },
+            width: { xs: '100%', md: '36%' },
             gap: 2,
             pt: 4,
-            pr: { xs: 0, lg: 4 },
-            borderRight: { xs: '0', lg: '1px solid #0000000f' },
-            margin: { xs: '0 auto', lg: '0' },
+            pr: { xs: 0, md: 4 },
+            borderRight: { xs: '0', md: '1px solid #0000000f' },
+            margin: { xs: '0 auto', md: '0' },
           }}
         >
           <div className="flex flex-col gap-4">
