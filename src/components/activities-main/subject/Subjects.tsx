@@ -8,7 +8,7 @@ interface SubjectsProps {
 }
 
 export default function Subjects({ className }: SubjectsProps) {
-  const { subjects } = useAppStore()
+  const { user } = useAppStore()
 
   return (
     <Container
@@ -18,7 +18,7 @@ export default function Subjects({ className }: SubjectsProps) {
       <h1 className="text-2xl font-semibold">Matérias</h1>
       <Divider sx={{ my: 2 }} />
       <Stack spacing={2}>
-        {subjects.map((subject, index) => (
+        {user?.Subjects.map((subject, index) => (
           <Fragment key={index}>
             <Subject
               id={subject.id}
