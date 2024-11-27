@@ -17,7 +17,7 @@ export type Subject = {
   Topics: Topic[]
 }
 
-export type Activities = {
+export type Activity = {
   createdAt: string
   id: string
   questionsCorrect: number | null
@@ -57,7 +57,7 @@ export type StudyPlans = {
 }
 
 export type User = {
-  Activities: Activities[]
+  Activities: Activity[]
   Reviews: Review[]
   StudyPlans: StudyPlans[]
   Subjects: Subject[]
@@ -72,21 +72,25 @@ export type User = {
 
 interface AppState {
   value: number
+  value2: number
   selectedSubject: Subject | null
   subjects: Subject[]
   user: User | null
   isFetched: boolean
   isUserFetched: boolean
   setValue: (value: number) => void
+  setValue2: (value: number) => void
   setSelectedSubject: (subject: Subject) => void
   setSubjects: (subjects: Subject[]) => void
   setUser: (user: User) => void
+  setIsUserFetched: (isUserFetched: boolean) => void
   fetchSubjects: (token: string) => Promise<void>
   fetchUser: (token: string) => Promise<void>
 }
 
 const useAppStore = create<AppState>((set, get) => ({
   value: 0,
+  value2: 0,
   selectedSubject: null,
   subjects: [],
   user: null,
@@ -94,6 +98,8 @@ const useAppStore = create<AppState>((set, get) => ({
   isUserFetched: false,
 
   setValue: (value) => set({ value }),
+
+  setValue2: (value2) => set({ value2 }),
 
   setSelectedSubject: (subject) => set({ selectedSubject: subject }),
 
@@ -106,6 +112,8 @@ const useAppStore = create<AppState>((set, get) => ({
     }),
 
   setUser: (user) => set({ user }),
+
+  setIsUserFetched: (isUserFetched) => set({ isUserFetched }),
 
   fetchSubjects: async (token: string) => {
     if (get().isFetched) return
@@ -141,7 +149,7 @@ const useAppStore = create<AppState>((set, get) => ({
   },
 
   fetchUser: async (token: string) => {
-    if (get().isFetched) return
+    if (get().isUserFetched) return
 
     try {
       const response = await api.get('user/profile/data', {
@@ -163,7 +171,7 @@ const useAppStore = create<AppState>((set, get) => ({
       subjects.forEach(async (subject: Subject) => {
         subject.Topics = await fetchTopics(subject.id)
       })
-      user.Activities.forEach(async (activity: Activities) => {
+      user.Activities.forEach(async (activity: Activity) => {
         activity.Subject = subjects.find(
           (subject) => subject.id === activity.subjectId,
         )

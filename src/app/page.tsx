@@ -11,7 +11,6 @@ export default async function Home() {
     redirect('/sign-in')
   }
 
-  if (session) console.log(session)
   return (
     <>
       <Header />

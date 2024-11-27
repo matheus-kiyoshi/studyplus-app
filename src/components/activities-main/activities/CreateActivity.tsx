@@ -19,7 +19,7 @@ import axios from 'axios'
 
 interface Activity {
   startDate: string
-  startTime: string // Adicionando a hora
+  startTime: string
   studyTime: number
   questionsDone?: number
   questionsCorrect?: number
@@ -31,7 +31,7 @@ interface Activity {
 export default function CreateActivity() {
   const [activity, setActivity] = useState<Activity>({
     startDate: new Date().toISOString().split('T')[0],
-    startTime: '00:00', // Inicializando com hora 00:00
+    startTime: '00:00',
     studyTime: 0,
     questionsDone: 0,
     questionsCorrect: 0,
@@ -45,7 +45,8 @@ export default function CreateActivity() {
     topicId: '',
   })
 
-  const { subjects, setSubjects } = useAppStore()
+  const { subjects, setSubjects, setValue2, fetchUser, setIsUserFetched } =
+    useAppStore()
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -98,7 +99,7 @@ export default function CreateActivity() {
 
     try {
       const payload = {
-        startDate: `${activity.startDate}T${activity.startTime}:00`, // Combinando data e hora
+        startDate: `${activity.startDate}T${activity.startTime}:00`,
         studyTime: activity.studyTime,
       }
       const response = await api.post(
@@ -157,6 +158,11 @@ export default function CreateActivity() {
         return subject
       })
       setSubjects(newSubjects)
+      if (session.user.token) {
+        setIsUserFetched(false)
+        fetchUser(session.user.token)
+      }
+      setValue2(0)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error('Erro:', error.response.data)
@@ -200,8 +206,18 @@ export default function CreateActivity() {
           onChange={handleInputChange}
           variant="standard"
           size="medium"
+          sx={{ width: '50%' }}
+          slotProps={{
+            htmlInput: {
+              max: new Date().toISOString().split('T')[0],
+            },
+
+            inputLabel: {
+              shrink: true,
+            },
+          }}
         />
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: 'flex', gap: 1, width: '50%' }}>
           <TextField
             id="startTimeHours"
             name="startTime"
@@ -254,11 +270,17 @@ export default function CreateActivity() {
           label="Matéria"
           labelId="subject-select-label"
         >
-          {subjects.map((subject) => (
-            <MenuItem key={subject.id} value={subject.id}>
-              {subject.name}
+          {subjects.length === 0 ? (
+            <MenuItem disabled value="">
+              Não há matérias disponíveis
             </MenuItem>
-          ))}
+          ) : (
+            subjects.map((subject) => (
+              <MenuItem key={subject.id} value={subject.id}>
+                {subject.name}
+              </MenuItem>
+            ))
+          )}
         </Select>
         <Typography color="error" variant="caption">
           {errors.subjectId}
@@ -278,11 +300,17 @@ export default function CreateActivity() {
           label="Tópico"
           labelId="topic-select-label"
         >
-          {topics.map((topic) => (
-            <MenuItem key={topic.id} value={topic.id}>
-              {topic.name}
+          {topics.length === 0 ? (
+            <MenuItem disabled value="">
+              Não há tópicos disponíveis
             </MenuItem>
-          ))}
+          ) : (
+            topics.map((topic) => (
+              <MenuItem key={topic.id} value={topic.id}>
+                {topic.name}
+              </MenuItem>
+            ))
+          )}
         </Select>
         <Typography color="error" variant="caption">
           {errors.topicId}
@@ -347,30 +375,6 @@ export default function CreateActivity() {
           sx={{ flex: 1 }}
         />
       </Box>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <TextField
-          id="questionsDone"
-          name="questionsDone"
-          label="Questões Feitas"
-          type="number"
-          value={activity.questionsDone}
-          onChange={handleInputChange}
-          variant="standard"
-          size="medium"
-          sx={{ flex: 1 }}
-        />
-        <TextField
-          id="questionsCorrect"
-          name="questionsCorrect"
-          label="Questões Acertadas"
-          type="number"
-          value={activity.questionsCorrect}
-          onChange={handleInputChange}
-          variant="standard"
-          size="medium"
-          sx={{ flex: 1 }}
-        />
-      </Box>
       <Divider className="my-2" />
       <Box className="flex gap-4">
         <Button type="submit" variant="contained" color="primary">
@@ -380,7 +384,7 @@ export default function CreateActivity() {
           variant="text"
           color="error"
           sx={{ px: 2 }}
-          onClick={() => router.back()}
+          onClick={() => setValue2(0)}
         >
           Cancelar
         </Button>
