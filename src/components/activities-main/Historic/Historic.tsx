@@ -51,6 +51,7 @@ export default function Historic() {
   const topics =
     subjects.find((subject) => subject.id === filter.subjectId)?.Topics || []
 
+  // TODO: needs to be refactored (filtering logic)
   const filteredActivities = user?.Activities.filter((activity) => {
     const activityDate = new Date(activity.startDate)
       .toISOString()

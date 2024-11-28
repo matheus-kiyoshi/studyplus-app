@@ -54,6 +54,7 @@ export default function BasicTabs() {
   } = useAppStore()
   const [value, setValue] = useState(0)
 
+  // should I do it here?
   useEffect(() => {
     if (session?.user.token && !isFetched && !isUserFetched) {
       fetchSubjects(session.user.token)

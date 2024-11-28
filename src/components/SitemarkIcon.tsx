@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import studypluslogo from '@/../public/studyplus-logo.jpeg'
+import studypluslogo from '@/../public/studyplus-logo.png'
 
 export default function SitemarkIcon() {
   return (

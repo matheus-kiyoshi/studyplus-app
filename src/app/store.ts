@@ -115,6 +115,7 @@ const useAppStore = create<AppState>((set, get) => ({
 
   setIsUserFetched: (isUserFetched) => set({ isUserFetched }),
 
+  // TODO: needs to be refactored (maybe don't need to get this)
   fetchSubjects: async (token: string) => {
     if (get().isFetched) return
 
@@ -124,6 +125,9 @@ const useAppStore = create<AppState>((set, get) => ({
       })
       const subjects = response.data as Subject[]
 
+      // TODO: transfer this logic to the backend or use in the fetchUser function
+      // TODO: do topics need to be in subjects or just me being lazy?
+      // TODO: fetchSubjects method can be deleted and the logic can be moved to fetchUser
       const fetchTopics = async (id: string) => {
         try {
           const topicResponse = await api.get(`subjects/${id}/topics`, {
@@ -148,6 +152,8 @@ const useAppStore = create<AppState>((set, get) => ({
     }
   },
 
+  // TODO: needs to be refactored (should I change the way user data is fetched?)
+  // TODO: is this the best way to fetch user data?
   fetchUser: async (token: string) => {
     if (get().isUserFetched) return
 

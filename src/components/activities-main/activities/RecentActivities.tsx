@@ -6,6 +6,7 @@ import useAppStore, { Activity } from '@/app/store'
 import { GiStopwatch } from 'react-icons/gi'
 import { FaClock } from 'react-icons/fa'
 
+// TODO: needs to be refactored
 export default function RecentActivities() {
   const { user } = useAppStore()
 

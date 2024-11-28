@@ -19,6 +19,7 @@ export default function Calendar() {
     setOpen(true)
   }
 
+  // TODO: needs to be refactored
   const events = user?.Activities.reduce(
     (
       acc: { date: string; activities: Activity[]; studyTime: number }[],

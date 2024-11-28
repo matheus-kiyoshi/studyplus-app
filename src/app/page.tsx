@@ -3,6 +3,7 @@ import Header from '@/components/layout/header/Header'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
+import Dashboard from '@/components/dashboard/Dashboard'
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
@@ -14,9 +15,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main className="flex h-screen w-screen items-center justify-center">
-        Em Breve
-      </main>
+      <Dashboard />
       <Footer />
     </>
   )

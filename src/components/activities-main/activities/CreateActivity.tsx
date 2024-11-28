@@ -28,6 +28,7 @@ interface Activity {
   topicId?: string
 }
 
+// TODO: needs to be refactored
 export default function CreateActivity() {
   const [activity, setActivity] = useState<Activity>({
     startDate: new Date().toISOString().split('T')[0],
