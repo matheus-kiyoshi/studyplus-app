@@ -24,8 +24,7 @@ export default function CreateSubject() {
     name: '',
     description: '',
   })
-  const { subjects, setValue, setSubjects, setIsUserFetched, fetchUser } =
-    useAppStore()
+  const { subjects, setValue, setSubjects, setUser, user } = useAppStore()
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -85,10 +84,12 @@ export default function CreateSubject() {
           Authorization: `Bearer ${session?.user?.token}`,
         },
       })
-      setSubjects([...subjects, response.data])
-      setIsUserFetched(false)
-      if (session.user.token) {
-        fetchUser(session.user.token)
+      const newSubject = { ...response.data, Topics: [] }
+      setSubjects([...subjects, newSubject])
+      if (user) {
+        console.log('passou aqui')
+        const newUser = { ...user, Subjects: [...user.Subjects, newSubject] }
+        setUser(newUser)
       }
       setValue(0)
     } catch (error) {

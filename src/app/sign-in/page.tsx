@@ -62,7 +62,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }))
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function SignIn(props: { disableCustomTheme?: boolean }) {
+export default function SignIn() {
   const [emailError, setEmailError] = useState(false)
   const [emailErrorMessage, setEmailErrorMessage] = useState('')
   const [passwordError, setPasswordError] = useState(false)

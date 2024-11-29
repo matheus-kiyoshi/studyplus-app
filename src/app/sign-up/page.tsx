@@ -3,7 +3,6 @@
 import { FormEvent, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
 import Divider from '@mui/material/Divider'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
@@ -13,7 +12,6 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import MuiCard from '@mui/material/Card'
 import { styled } from '@mui/material/styles'
-import AppTheme from '@/shared-theme/AppTheme'
 import { GoogleIcon, SitemarkIcon } from '@/components/sign-up/CustomIcons'
 import ColorModeSelect from '@/shared-theme/ColorModeSelect'
 import api from '@/utils/api'
@@ -62,7 +60,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   },
 }))
 
-export default function SignUp(props: { disableCustomTheme?: boolean }) {
+export default function SignUp() {
   const [emailError, setEmailError] = useState(false)
   const [emailErrorMessage, setEmailErrorMessage] = useState('')
   const [passwordError, setPasswordError] = useState(false)
@@ -168,8 +166,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   }
 
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
+    <>
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
@@ -267,6 +264,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           </Box>
         </Card>
       </SignUpContainer>
-    </AppTheme>
+    </>
   )
 }
