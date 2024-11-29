@@ -186,7 +186,6 @@ const useAppStore = create<AppState>((set, get) => ({
         )
       })
       user.Subjects = subjects
-      console.log(user)
       set({ user, isUserFetched: true })
     } catch (error) {
       console.error('Erro ao buscar usuário:', error)

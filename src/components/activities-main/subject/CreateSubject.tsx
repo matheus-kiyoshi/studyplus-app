@@ -24,7 +24,8 @@ export default function CreateSubject() {
     name: '',
     description: '',
   })
-  const { subjects, setValue, setSubjects } = useAppStore()
+  const { subjects, setValue, setSubjects, setIsUserFetched, fetchUser } =
+    useAppStore()
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -85,6 +86,10 @@ export default function CreateSubject() {
         },
       })
       setSubjects([...subjects, response.data])
+      setIsUserFetched(false)
+      if (session.user.token) {
+        fetchUser(session.user.token)
+      }
       setValue(0)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import api from '@/utils/api'
 import axios from 'axios'
-import useAppStore from '@/app/store'
+import useAppStore, { User } from '@/app/store'
 
 interface Topic {
   name: string
@@ -26,7 +26,7 @@ export default function CreateTopic({
     name: '',
     description: '',
   })
-  const { subjects, setSubjects } = useAppStore()
+  const { user, setUser, setSubjects } = useAppStore()
   const { data: session } = useSession()
   const router = useRouter()
 
@@ -86,13 +86,16 @@ export default function CreateTopic({
           Authorization: `Bearer ${session?.user?.token}`,
         },
       })
-      const newSubjects = subjects.map((s) => {
-        if (s.id === subjectId) {
-          return { ...s, Topics: [...s.Topics, response.data] }
-        }
-        return s
-      })
+      const newSubjects =
+        user?.Subjects?.map((s) => {
+          if (s.id === subjectId) {
+            return { ...s, Topics: [...s.Topics, response.data] }
+          }
+          return s
+        }) || []
       setSubjects(newSubjects)
+      const updatedUser = { ...user, Subjects: newSubjects }
+      setUser(updatedUser as User)
       handleClose()
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

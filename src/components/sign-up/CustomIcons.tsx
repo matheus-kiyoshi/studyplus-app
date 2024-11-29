@@ -1,7 +1,7 @@
 import * as React from 'react'
 import SvgIcon from '@mui/material/SvgIcon'
 import Image from 'next/image'
-import studypluslogo from '@/../public/studyplus-logo.jpeg'
+import studypluslogo from '@/../public/studyplus-logo.png'
 
 export function SitemarkIcon() {
   return <Image alt="Logo" src={studypluslogo} height={21} width={100} />

@@ -53,7 +53,7 @@ export default function Dashboard() {
           </Box>
           <Box className="flex w-full flex-nowrap justify-between gap-8 pt-6">
             <Box className="flex w-full flex-col gap-4 rounded-lg border p-4 shadow-md">
-              <Typography variant="h4">Últimos 7 dias</Typography>
+              <Typography variant="h4">Últimos 7 dias (em breve)</Typography>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={sampleData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -72,6 +72,7 @@ export default function Dashboard() {
             </Box>
             <Box className="flex w-full flex-col gap-4 rounded-lg border p-4 shadow-md">
               <Typography variant="h4">Matérias mais estudadas</Typography>
+              <p>Em breve</p>
             </Box>
           </Box>
         </Box>

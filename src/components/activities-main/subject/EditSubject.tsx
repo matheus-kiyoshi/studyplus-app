@@ -54,12 +54,10 @@ export default function EditSubject({
     description: '',
   })
   const [open, setOpen] = useState(false)
-  const { subjects, setValue, setSubjects } = useAppStore()
+  const { subjects, setValue, setSubjects, user, setUser } = useAppStore()
   const { data: session } = useSession()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-
-  console.log(subjects.find((subject) => subject.id === id))
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -115,6 +113,13 @@ export default function EditSubject({
       })
       const newSubjects = subjects.map((s) => (s.id === id ? response.data : s))
       setSubjects(newSubjects)
+      if (user) {
+        const newUser = {
+          ...user,
+          Subjects: newSubjects,
+        }
+        setUser(newUser)
+      }
       setValue(0)
     } catch (error) {
       console.error('Erro de rede:', error)
@@ -134,6 +139,13 @@ export default function EditSubject({
       })
       const newSubjects = subjects.filter((s) => s.id !== id)
       setSubjects(newSubjects)
+      if (user) {
+        const newUser = {
+          ...user,
+          Subjects: newSubjects,
+        }
+        setUser(newUser)
+      }
       setValue(0)
     } catch (error) {
       console.error('Erro de rede:', error)
@@ -161,6 +173,13 @@ export default function EditSubject({
         return s
       })
       setSubjects(newSubjects)
+      if (user) {
+        const newUser = {
+          ...user,
+          Subjects: newSubjects,
+        }
+        setUser(newUser)
+      }
     } catch (error) {
       console.error('Erro de rede:', error)
     }

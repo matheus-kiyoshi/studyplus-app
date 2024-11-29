@@ -194,7 +194,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 required
                 fullWidth
                 id="name"
-                placeholder="Ryujin"
+                placeholder="ex. shin ryujin"
                 error={nameError}
                 helperText={nameErrorMessage}
                 color={nameError ? 'error' : 'primary'}

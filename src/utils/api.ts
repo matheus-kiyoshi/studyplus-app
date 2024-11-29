@@ -6,7 +6,7 @@ import axios, {
 import { redirect } from 'next/navigation'
 
 const apiConfig: Partial<InternalAxiosRequestConfig> = {
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
   headers: new axios.AxiosHeaders({
     'Content-Type': 'application/json',
